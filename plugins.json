@@ -1,5 +1,26 @@
 [
   {
+    "id": "dev.anionzo.gia-vang",
+    "name": "Giá vàng & USD",
+    "author": "anionzo",
+    "repo": "https://github.com/anionzo/nookdeck-gia-vang/tree/292b39887d891b77f240ec614457cd70f09b6423",
+    "version": "1.0.0",
+    "sha256": "35bcd27c23d0216b05afdd4e8cbbbe7a83ba5224ddaf0118ec07627b65e0d251",
+    "description": "Vietnam gold prices (SJC, ring gold, DOJI, PNJ, Bao Tin), world gold and the Vietcombank USD/VND rate, with charts",
+    "screenshot": "https://raw.githubusercontent.com/anionzo/nookdeck-gia-vang/292b39887d891b77f240ec614457cd70f09b6423/preview.png",
+    "permissions": {
+      "network": [
+        "www.vang.today",
+        "edge-api.pnj.io",
+        "portal.vietcombank.com.vn",
+        "open.er-api.com",
+        "api.coingecko.com",
+        "api.gold-api.com"
+      ],
+      "storage": true
+    }
+  },
+  {
     "id": "dev.nookdeck.batteries",
     "name": "Batteries",
     "author": "Nookdeck",

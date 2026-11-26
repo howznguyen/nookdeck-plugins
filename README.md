@@ -40,6 +40,7 @@ Browse them with previews at [nookdeck.app/plugins](https://nookdeck.app/plugins
 
 | Plugin | Version | What it does | Permissions |
 |---|---|---|---|
+| [Giá vàng & USD](https://github.com/anionzo/nookdeck-gia-vang/tree/292b39887d891b77f240ec614457cd70f09b6423) | 1.0.0 | Vietnam gold prices (SJC, ring gold, DOJI, PNJ, Bao Tin), world gold and the Vietcombank USD/VND rate, with charts | network: www.vang.today, edge-api.pnj.io, portal.vietcombank.com.vn, open.er-api.com, api.coingecko.com, api.gold-api.com, storage |
 | [Batteries](plugins/batteries) | 1.0.1 | Battery of your Mac, Magic keyboard, mouse and trackpad, and AirPods | shell |
 | [Calendar](plugins/calendar) | 1.0.0 | Your next events from Google, iCloud and Outlook calendar links | network: calendar.google.com, *.icloud.com, outlook.live.com, outlook.office365.com, outlook.office.com |
 | [Clipboard snippets](plugins/clipboard-snippets) | 1.0.0 | Buttons that copy a saved piece of text to the clipboard | shell |
