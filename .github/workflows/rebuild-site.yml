@@ -1,0 +1,25 @@
+name: rebuild site
+# nookdeck.app builds its theme and plugin pages from this registry at build time,
+# so a merge here asks Cloudflare Workers Builds to rebuild the site.
+on:
+  push:
+    branches: [main]
+    paths:
+      - plugins.json
+      - themes.json
+      - themes/**
+      - plugins/**
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the nookdeck-web deploy hook
+        env:
+          HOOK: ${{ secrets.NOOKDECK_WEB_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::NOOKDECK_WEB_DEPLOY_HOOK is not set, the site was not rebuilt"
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" | jq '{success, build: .result.build_uuid, branch: .result.branch}'
