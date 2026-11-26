@@ -22,7 +22,8 @@
           "shell": { "type": "boolean" },
           "keyboard": { "type": "boolean" },
           "storage": { "type": "boolean" },
-          "onair": { "type": "boolean" }
+          "onair": { "type": "boolean" },
+          "notify": { "type": "boolean" }
         }
       },
       "screenshot": { "type": "string", "pattern": "^https://" },

@@ -7,6 +7,7 @@ const perm = (p: any): string => {
   if (p?.keyboard) out.push("keyboard");
   if (p?.storage) out.push("storage");
   if (p?.onair) out.push("On Air");
+  if (p?.notify) out.push("notifications");
   return out.join(", ") || "none";
 };
 const local = (repo: string) => { const m = /\/tree\/[^/]+\/((?:plugins|themes)\/[^/]+)\/?$/.exec(repo); return m ? m[1] : repo; };

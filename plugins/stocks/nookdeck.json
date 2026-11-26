@@ -1,0 +1,42 @@
+{
+  "$schema": "https://nookdeck.app/schema/plugin.json",
+  "id": "dev.nookdeck.stocks",
+  "name": "Stocks",
+  "version": "1.0.0",
+  "nookdeck": ">=0.6.0",
+  "author": "Nookdeck",
+  "description": "Price, change and today's chart for up to 4 symbols, from Twelve Data with your own free API key",
+  "icon": "activity",
+  "permissions": { "network": ["api.twelvedata.com"], "storage": true },
+  "settings": [
+    { "key": "apikey", "type": "secret", "label": "Twelve Data API key (free at twelvedata.com)" },
+    { "key": "symbols", "type": "string", "label": "Symbols (up to 4, separated by commas)", "default": "AAPL, MSFT" }
+  ],
+  "widgets": [
+    {
+      "id": "watchlist",
+      "name": "Watchlist",
+      "render": "card",
+      "sizes": ["2x2", "4x2", "4x3"],
+      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
+        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "AAPL", "bold": true }, { "t": "text", "text": "355.58" }, { "t": "pill", "text": "+0.43%", "tone": "ok" }] },
+        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "MSFT", "bold": true }, { "t": "text", "text": "512.10" }, { "t": "pill", "text": "−0.82%", "tone": "bad" }] },
+        { "t": "text", "text": "Market open", "size": "s", "tone": "muted" }
+      ] } },
+      "settings": []
+    },
+    {
+      "id": "quote",
+      "name": "One symbol",
+      "render": "card",
+      "sizes": ["2x1", "2x2", "3x2", "4x2"],
+      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
+        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "AAPL", "bold": true }, { "t": "pill", "text": "+0.43%", "tone": "ok" }] },
+        { "t": "number", "value": "355.58", "unit": "USD", "size": "xl" },
+        { "t": "sparkline", "points": [352.1, 353.4, 352.8, 354.0, 354.9, 354.2, 355.1, 355.6], "tone": "ok" }
+      ] } },
+      "settings": [{ "key": "symbol", "type": "string", "label": "Symbol (one from the plugin's list; empty: the first)", "default": "" }]
+    }
+  ],
+  "main": "src/index.ts"
+}

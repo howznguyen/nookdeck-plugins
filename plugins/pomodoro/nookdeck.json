@@ -2,22 +2,24 @@
   "$schema": "https://nookdeck.app/schema/plugin.json",
   "id": "dev.nookdeck.pomodoro",
   "name": "Pomodoro",
-  "version": "1.0.0",
-  "nookdeck": ">=0.5.1",
+  "version": "1.1.0",
+  "nookdeck": ">=0.7.0",
   "author": "Nookdeck",
   "description": "A focus timer that keeps time on the computer while the phone sleeps",
   "icon": "clock",
-  "permissions": { "storage": true },
+  "permissions": { "storage": true, "notify": true },
   "settings": [
     { "key": "focus", "type": "number", "label": "Focus (minutes)", "default": 25 },
-    { "key": "break", "type": "number", "label": "Break (minutes)", "default": 5 }
+    { "key": "break", "type": "number", "label": "Break (minutes)", "default": 5 },
+    { "key": "notify", "type": "boolean", "label": "Tell the phones when a phase ends", "default": true },
+    { "key": "sound", "type": "select", "label": "Sound when a phase ends", "options": ["none", "chime", "soft", "birds"], "default": "none" }
   ],
   "widgets": [
     {
       "id": "timer",
       "name": "Pomodoro",
       "render": "card",
-      "sizes": ["2x1", "2x2", "4x2"],
+      "sizes": ["2x1", "3x1", "4x1", "2x2", "3x2", "4x2"],
       "preview": {"root": {"t": "col", "gap": 1, "children": [{"t": "ring", "value": 0.26, "tone": "accent", "text": "18:24", "size": "l", "label": "Focus · 3 today"}, {"t": "row", "gap": 1, "children": [{"t": "button", "label": "", "icon": "refresh", "action": "reset"}, {"t": "button", "label": "Pause", "action": "toggle", "tone": "accent", "active": true}, {"t": "button", "label": "", "icon": "player-skip-forward", "action": "skip"}]}]}},
       "settings": [],
       "source": { "agent": { "every": 5 } }

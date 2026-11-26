@@ -1,0 +1,48 @@
+{
+  "$schema": "https://nookdeck.app/schema/plugin.json",
+  "id": "dev.nookdeck.water",
+  "name": "Water reminder",
+  "version": "1.0.0",
+  "nookdeck": ">=0.7.0",
+  "author": "Nookdeck",
+  "description": "Count your glasses of water toward a daily goal, with reminders on the phone during the hours you choose",
+  "icon": "bell",
+  "permissions": { "storage": true, "notify": true },
+  "settings": [
+    { "key": "goal", "type": "number", "label": "Glasses a day", "default": 8 },
+    { "key": "every", "type": "number", "label": "Remind every (minutes, 0: no reminders)", "default": 60 },
+    { "key": "from", "type": "string", "label": "Reminders from (HH:MM)", "default": "09:00" },
+    { "key": "to", "type": "string", "label": "Reminders until (HH:MM)", "default": "21:00" },
+    { "key": "sound", "type": "select", "label": "Reminder sound", "options": ["none", "chime", "soft", "birds"], "default": "soft" }
+  ],
+  "widgets": [
+    {
+      "id": "today",
+      "name": "Water today",
+      "render": "card",
+      "sizes": ["1x1", "2x1", "2x2", "4x2"],
+      "preview": { "root": { "t": "col", "gap": 1, "children": [
+        { "t": "ring", "value": 0.375, "tone": "accent", "text": "3/8", "size": "l", "label": "3 of 8" },
+        { "t": "row", "gap": 1, "children": [
+          { "t": "button", "label": "-1", "icon": "minus", "action": "remove", "layout": "tile" },
+          { "t": "button", "label": "+1", "icon": "plus", "action": "add", "layout": "tile", "tone": "accent", "active": true }
+        ] }
+      ] } },
+      "settings": []
+    },
+    {
+      "id": "week",
+      "name": "Water, last 7 days",
+      "render": "chart",
+      "style": "bars",
+      "sizes": ["2x1", "2x2", "4x2"],
+      "preview": { "points": [6, 8, 5, 9, 7, 8, 3], "label": "Glasses, last 7 days", "unit": "glasses" },
+      "settings": []
+    }
+  ],
+  "actions": [
+    { "id": "add", "name": "One glass more" },
+    { "id": "remove", "name": "One glass fewer" }
+  ],
+  "main": "src/index.ts"
+}

@@ -1,5 +1,5 @@
 import type { PluginContext, PluginModule } from "@nookdeck/plugin";
-import { buildCard, lengths, readDays, readState, reset, settle, skip, toggle, type Days, type Lengths, type State, type Tile } from "./lib";
+import { ANNOUNCE_WITHIN_MS, alertOf, buildCard, endMessage, lengths, readDays, readState, reset, settle, skip, toggle, type Days, type Lengths, type State, type Tile } from "./lib";
 
 /** A tap that arrives just after the phase ran out was meant for the old card: it must not start the next phase. */
 export const LATE_TAP_MS = 2_000;
@@ -30,12 +30,22 @@ export function createPlugin(env: Env = real): PluginModule {
 
       async function load(): Promise<{ state: State; days: Days; finished: number | null }> {
         const [s, d] = await Promise.all([ctx.storage.get("timer"), ctx.storage.get("days")]);
-        const out = settle(readState(s), readDays(d), env.now());
+        const before = readState(s);
+        const out = settle(before, readDays(d), env.now());
         if (out.finished !== null) {
           await ctx.storage.set("days", out.days);
           await ctx.storage.set("timer", out.state);
+          announce(before.phase, out.finished);
         }
         return out;
+      }
+
+      /** Tells the phones that a phase ended, once (the end is saved before this runs), and only if it ended just now. */
+      function announce(ended: State["phase"], at: number) {
+        const how = alertOf(ctx.settings.get());
+        if (!how.notify || !ctx.notify || env.now() - at > ANNOUNCE_WITHIN_MS) return;
+        const m = endMessage(ended);
+        ctx.notify(m.title, { body: m.body, ...(how.sound ? { sound: how.sound } : {}) }).catch((err: unknown) => ctx.log("notify failed:", err instanceof Error ? err.message : err));
       }
 
       /** The card once a second, only while a phase runs. */

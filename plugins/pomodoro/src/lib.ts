@@ -93,10 +93,25 @@ export function clock(ms: number): string {
 /** A tile's size in grid cells. */
 export interface Tile { w: number; h: number }
 
+/** What the phones are told when a phase ends: the phase that just ended decides the words. */
+export function endMessage(ended: Phase): { title: string; body: string } {
+  return ended === "focus" ? { title: "Focus block done", body: "Time for a break" } : { title: "Break is over", body: "Ready for the next focus block" };
+}
+
+export const SOUNDS = ["none", "chime", "soft", "birds"] as const;
+export type Sound = (typeof SOUNDS)[number];
+/** How the end of a phase is announced, from the settings: a notification (on by default) with an optional sound (off by default). */
+export function alertOf(s: Record<string, unknown>): { notify: boolean; sound: Exclude<Sound, "none"> | null } {
+  const sound = (SOUNDS as readonly string[]).includes(String(s.sound)) && s.sound !== "none" ? (s.sound as Exclude<Sound, "none">) : null;
+  return { notify: s.notify !== false, sound };
+}
+/** A phase that ended longer ago than this (the computer slept, Nookdeck was off) is counted but not announced. */
+export const ANNOUNCE_WITHIN_MS = 2 * 60_000;
+
 /**
- * The timer as a ring: the time left in the middle, the arc filling as the phase runs. A tile at least twice as wide as it is
- * high has the ring on the left and the buttons beside it; a squarer one has the ring on top. Without a size (the preview, an
- * older Nookdeck) it takes the square one.
+ * The timer as a ring: the time left in the middle, the arc filling as the phase runs. A tile wider than it is high has the ring on
+ * the left and the controls beside it; a square or tall one has the ring on top. Without a size (the preview, an older Nookdeck) it
+ * takes the square one.
  */
 export function buildCard(state: State, days: Days, len: Lengths, now: number, tile?: Tile) {
   const { left, total } = remaining(state, len, now);
@@ -120,7 +135,7 @@ export function buildCard(state: State, days: Days, len: Lengths, now: number, t
   const reset = { t: "button", label: "", icon: "refresh", action: "reset" };
   const skipIt = { t: "button", label: "", icon: "player-skip-forward", action: "skip" };
 
-  if (!tile || tile.w < tile.h * 2) {
+  if (!tile || tile.w <= tile.h) {
     return { root: { t: "col", gap: 1, children: [
       { ...ring, label: said },
       // between two icon buttons there is room for the word or an icon, not both

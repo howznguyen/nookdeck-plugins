@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { createPlugin } from "../src/index";
-import { START, buildCard, clock, dayKey, lengths, prune, readDays, readState, remaining, settle, skip, toggle, type State } from "../src/lib";
+import { START, alertOf, buildCard, endMessage, clock, dayKey, lengths, prune, readDays, readState, remaining, settle, skip, toggle, type State } from "../src/lib";
 
 const MIN = 60_000;
 const len = lengths({});
@@ -78,18 +78,32 @@ describe("the timer", () => {
     expect(JSON.stringify(build(4, 2))).toContain('"t":"pill","text":"Focus"');
     expect((buildCard(START, {}, len, at(25, 9)).root as any).t).toBe("col");
   });
+  test("any tile wider than it is high puts the ring on the left (3x1, 3x2, 4x1 too)", () => {
+    const build = (w: number, h: number) => buildCard(START, {}, len, at(25, 9), { w, h }).root as any;
+    expect([build(3, 1).t, build(3, 2).t, build(4, 1).t, build(2, 2).t]).toEqual(["row", "row", "row", "col"]);
+  });
+  test("the end of a phase: what the phones are told, and the settings", () => {
+    expect(endMessage("focus")).toEqual({ title: "Focus block done", body: "Time for a break" });
+    expect(endMessage("break").title).toBe("Break is over");
+    expect(alertOf({})).toEqual({ notify: true, sound: null });
+    expect(alertOf({ notify: false, sound: "chime" })).toEqual({ notify: false, sound: "chime" });
+    expect(alertOf({ sound: "none" }).sound).toBeNull();
+    expect(alertOf({ sound: "siren" }).sound).toBeNull();
+  });
 });
 
 /** The plugin against a fake agent with its own clock. `store` outlives a restart, like the plugin's data file. */
-function harness(store = new Map<string, unknown>(), clockRef = { now: at(25, 9) }) {
+function harness(store = new Map<string, unknown>(), clockRef = { now: at(25, 9) }, extra: { settings?: Record<string, unknown>; notify?: boolean } = {}) {
   const pushes: any[] = [];
+  const notes: Array<[string, any]> = [];
   const acts: Record<string, (s: any) => any> = {};
   let provide: (tile?: { w: number; h: number }) => Promise<any> = async () => null;
   let tick: (() => void) | null = null;
   const plugin = createPlugin({ now: () => clockRef.now, every: (fn) => { tick = fn; return () => { tick = null; }; } });
   void plugin.activate({
     id: "dev.nookdeck.pomodoro", log: () => {},
-    settings: { get: () => ({ focus: 25, break: 5 }) },
+    settings: { get: () => ({ focus: 25, break: 5, ...extra.settings }) },
+    ...(extra.notify === false ? {} : { notify: async (title: string, o: any) => { notes.push([title, o]); } }),
     storage: { get: async (k: string) => store.get(k) ?? null, set: async (k: string, v: unknown) => { store.set(k, structuredClone(v)); } },
     net: { fetch: async () => { throw new Error("no network"); } },
     widgets: { provide: (_id: string, fn: any) => { provide = (tile) => fn({}, tile ?? { w: 2, h: 2 }); }, push: (_id: string, u: any) => pushes.push(typeof u === "function" ? { wide: u({ w: 4, h: 2 }), square: u({ w: 2, h: 2 }) } : u) },
@@ -97,7 +111,7 @@ function harness(store = new Map<string, unknown>(), clockRef = { now: at(25, 9)
   } as any);
   const settleTicks = () => new Promise((r) => setTimeout(r, 5));
   return {
-    store, clockRef, pushes, plugin,
+    store, clockRef, pushes, plugin, notes,
     act: (id: string) => acts[id]!({}),
     card: async () => JSON.stringify((await provide()).data),
     ticking: () => tick !== null,
@@ -160,5 +174,43 @@ describe("the plugin", () => {
     expect(h.store.get("timer")).toEqual({ phase: "break", status: "ready" });
     await h.act("toggle");
     expect(h.store.get("timer")).toMatchObject({ phase: "break", status: "running" });
+  });
+});
+
+describe("telling the phones", () => {
+  test("a phase that runs out is announced once, with the chosen sound", async () => {
+    const h = harness(undefined, undefined, { settings: { sound: "soft" } });
+    await h.act("toggle");
+    h.clockRef.now += 25 * MIN + 1000;
+    await h.tick();
+    await h.tick();
+    await h.card();
+    expect(h.notes).toEqual([["Focus block done", { body: "Time for a break", sound: "soft" }]]);
+  });
+  test("no sound by default; nothing when turned off, when the permission is missing, or when it ended long ago", async () => {
+    const plain = harness();
+    await plain.act("toggle");
+    plain.clockRef.now += 25 * MIN;
+    await plain.tick();
+    expect(plain.notes).toEqual([["Focus block done", { body: "Time for a break" }]]);
+
+    const off = harness(undefined, undefined, { settings: { notify: false, sound: "chime" } });
+    await off.act("toggle");
+    off.clockRef.now += 25 * MIN;
+    await off.tick();
+    expect(off.notes).toEqual([]);
+
+    const old = harness();
+    await old.act("toggle");
+    old.clockRef.now += 25 * MIN + 3 * MIN; // the computer slept through the end
+    await old.card();
+    expect(old.notes).toEqual([]);
+    expect(await old.card()).toContain("1 today"); // still counted
+
+    const noPerm = harness(undefined, undefined, { notify: false });
+    await noPerm.act("toggle");
+    noPerm.clockRef.now += 25 * MIN;
+    await noPerm.tick();
+    expect(noPerm.ticking()).toBe(false);
   });
 });
