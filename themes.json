@@ -1,5 +1,44 @@
 [
   {
+    "id": "dev.anionzo.kim",
+    "name": "Kim",
+    "author": "anionzo",
+    "repo": "https://github.com/anionzo/nookdeck-kim/tree/b637a9a761b57f1d3f9221ef683bd9ceab7fe895/themes/kim",
+    "version": "1.0.0",
+    "sha256": "1207f0b01d5f734465209efdd11cb39fc4683b2526ccac2bf835ebee4e920636",
+    "description": "Warm gold on deep ink, set in Be Vietnam Pro so Vietnamese text and big numbers read cleanly. Night (dark) and Day (light). No animation.",
+    "license": "MIT (fonts: Be Vietnam Pro, OFL-1.1)",
+    "credit": "Original design",
+    "variants": [
+      {
+        "id": "dem",
+        "name": "Đêm (Night)",
+        "mode": "dark",
+        "preview": "https://raw.githubusercontent.com/anionzo/nookdeck-kim/b637a9a761b57f1d3f9221ef683bd9ceab7fe895/themes/kim/previews/dem.png",
+        "colors": {
+          "bg": "#12100c",
+          "tile": "#1c1913",
+          "accent": "#e8b84a",
+          "text": "#f6efe0",
+          "muted": "#a39a86"
+        }
+      },
+      {
+        "id": "ngay",
+        "name": "Ngày (Day)",
+        "mode": "light",
+        "preview": "https://raw.githubusercontent.com/anionzo/nookdeck-kim/b637a9a761b57f1d3f9221ef683bd9ceab7fe895/themes/kim/previews/ngay.png",
+        "colors": {
+          "bg": "#f7f2e7",
+          "tile": "#fffdf8",
+          "accent": "#a8740f",
+          "text": "#221c10",
+          "muted": "#7a7060"
+        }
+      }
+    ]
+  },
+  {
     "id": "dev.nookdeck.aurora",
     "name": "Aurora",
     "author": "Nookdeck",

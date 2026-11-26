@@ -1,0 +1,15 @@
+/* Kim for Nookdeck. Pure CSS, no animation. Safari 12 safe. */
+
+/* Even-width digits so prices do not jitter when they change. */
+[data-part="tile-value"] { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; font-weight: 700; letter-spacing: -0.01em; }
+[data-part="tile-label"] { letter-spacing: .02em; }
+
+/* A faint warm light from the top of the screen. */
+:root::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 55%; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 50% 0, rgba(232, 184, 74, .10), rgba(232, 184, 74, 0) 70%);
+}
+
+/* A thin gold edge on top of each tile. */
+[data-part="tile"] { box-shadow: inset 0 1px 0 rgba(232, 184, 74, .14), 0 1px 2px rgba(0, 0, 0, .25); }
+[data-part="tile"][data-state="on"], [data-part="tile"][data-state="playing"] { box-shadow: inset 0 0 0 1px var(--nd-accent); }

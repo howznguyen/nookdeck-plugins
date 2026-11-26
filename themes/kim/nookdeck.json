@@ -1,0 +1,58 @@
+{
+  "$schema": "https://nookdeck.app/schema/plugin.json",
+  "type": "theme",
+  "id": "dev.anionzo.kim",
+  "name": "Kim",
+  "version": "1.0.0",
+  "nookdeck": ">=0.4.0",
+  "author": "anionzo",
+  "description": "Warm gold on deep ink, set in Be Vietnam Pro so Vietnamese text and big numbers read cleanly. Night (dark) and Day (light). No animation.",
+  "preview": "previews/dem.png",
+  "css": "theme.css",
+  "auto": { "light": "ngay", "dark": "dem" },
+  "theme": {
+    "tileStyle": "solid",
+    "radius": 14,
+    "gap": 10,
+    "shadow": "soft",
+    "font": "pkg:Be Vietnam Pro",
+    "numberFont": "pkg:Be Vietnam Pro",
+    "labelWeight": "medium",
+    "fonts": [
+      { "family": "Be Vietnam Pro", "file": "fonts/BeVietnamPro-Regular.woff2", "weight": 400 },
+      { "family": "Be Vietnam Pro", "file": "fonts/BeVietnamPro-SemiBold.woff2", "weight": 600 },
+      { "family": "Be Vietnam Pro", "file": "fonts/BeVietnamPro-Bold.woff2", "weight": 700 }
+    ]
+  },
+  "variants": [
+    {
+      "id": "dem", "name": "Đêm (Night)", "mode": "dark", "preview": "previews/dem.png",
+      "theme": {
+        "accent": "#e8b84a", "background": "#12100c", "tile": "#1c1913", "text": "#f6efe0", "muted": "#a39a86",
+        "gradient": { "from": "#12100c", "to": "#1d1810", "angle": 180 },
+        "border": { "width": 1, "color": "#2e281c" },
+        "palette": { "ok": "#6fcf97", "warn": "#f2c94c", "error": "#eb5757", "info": "#56ccf2" },
+        "chartColors": ["#e8b84a", "#56ccf2", "#6fcf97", "#eb8a57", "#bb86fc", "#f6efe0"]
+      }
+    },
+    {
+      "id": "ngay", "name": "Ngày (Day)", "mode": "light", "preview": "previews/ngay.png",
+      "theme": {
+        "accent": "#a8740f", "background": "#f7f2e7", "tile": "#fffdf8", "text": "#221c10", "muted": "#7a7060",
+        "border": { "width": 1, "color": "#e6dcc6" },
+        "palette": { "ok": "#1f9d55", "warn": "#b7791f", "error": "#c53030", "info": "#2b6cb0" },
+        "chartColors": ["#a8740f", "#2b6cb0", "#1f9d55", "#c05621", "#6b46c1", "#221c10"]
+      }
+    }
+  ],
+  "options": [
+    {
+      "id": "accent", "name": "Accent",
+      "values": [
+        { "id": "gold", "name": "Gold", "variants": { "dem": { "accent": "#e8b84a" }, "ngay": { "accent": "#a8740f" } } },
+        { "id": "jade", "name": "Jade", "variants": { "dem": { "accent": "#4fd1a5" }, "ngay": { "accent": "#127a5b" } } },
+        { "id": "red", "name": "Lacquer red", "variants": { "dem": { "accent": "#f06b5a" }, "ngay": { "accent": "#b53324" } } }
+      ]
+    }
+  ]
+}

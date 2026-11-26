@@ -57,6 +57,7 @@ Browse them at [nookdeck.app/themes](https://nookdeck.app/themes), or in Nookdec
 
 | Theme | Variants | Licence | Credit |
 |---|---|---|---|
+| [Kim](themes/kim) | Đêm (Night), Ngày (Day) | MIT (fonts: Be Vietnam Pro, OFL-1.1) | Original design |
 | [Aurora](themes/aurora) | Borealis, Sunset | MIT | Original Nookdeck design |
 | [Blueprint](themes/blueprint) | Blueprint, Whiteprint | OFL-1.1 (fonts: IBM Plex Mono) | Original Nookdeck design |
 | [Brutalist](themes/brutalist) | Yellow, Concrete, Riot | OFL-1.1 (fonts: Archivo Black, Archivo Narrow) | Original Nookdeck design |
