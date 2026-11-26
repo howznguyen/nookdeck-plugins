@@ -21,7 +21,8 @@
           "network": { "type": "array", "items": { "type": "string" } },
           "shell": { "type": "boolean" },
           "keyboard": { "type": "boolean" },
-          "storage": { "type": "boolean" }
+          "storage": { "type": "boolean" },
+          "onair": { "type": "boolean" }
         }
       },
       "screenshot": { "type": "string", "pattern": "^https://" },

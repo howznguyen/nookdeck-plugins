@@ -16,7 +16,7 @@ function rawManifestUrl(repo: string): string | null {
   const [, owner, name, branch = "main", sub = ""] = m;
   return `https://raw.githubusercontent.com/${owner}/${name}/${branch}/${sub ? sub.replace(/\/$/, "") + "/" : ""}nookdeck.json`;
 }
-const norm = (p: any) => JSON.stringify({ network: [...(p?.network ?? [])].sort(), shell: !!p?.shell, keyboard: !!p?.keyboard, storage: !!p?.storage });
+const norm = (p: any) => JSON.stringify({ network: [...(p?.network ?? [])].sort(), shell: !!p?.shell, keyboard: !!p?.keyboard, storage: !!p?.storage, onair: !!p?.onair });
 
 for (const [i, p] of (Array.isArray(list) ? list : []).entries()) {
   const at = `entry ${i} (${p?.id ?? "?"})`;

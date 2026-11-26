@@ -1,0 +1,108 @@
+{
+  "$schema": "https://nookdeck.app/schema/plugin.json",
+  "id": "dev.nookdeck.obs",
+  "name": "OBS Studio",
+  "version": "1.0.0",
+  "nookdeck": ">=0.7.0",
+  "author": "Nookdeck",
+  "description": "Scenes, recording, streaming, mute and sources of OBS Studio, with their live state, and On Air while you are live",
+  "icon": "video",
+  "permissions": { "network": ["ws://127.0.0.1:4455", "ws://localhost:4455"], "onair": true },
+  "settings": [
+    { "key": "host", "type": "select", "label": "OBS address", "options": ["127.0.0.1", "localhost"], "default": "127.0.0.1" },
+    { "key": "port", "type": "number", "label": "WebSocket port (OBS: Tools > WebSocket Server Settings)", "default": 4455 },
+    { "key": "password", "type": "secret", "label": "WebSocket password" }
+  ],
+  "widgets": [
+    {
+      "id": "scene",
+      "name": "Scene",
+      "render": "card",
+      "sizes": ["1x1", "2x1", "2x2"],
+      "preview": { "root": { "t": "button", "layout": "tile", "label": "Main", "icon": "layout-grid", "action": "scene", "args": { "scene": "Main" }, "active": true } },
+      "settings": [{ "key": "scene", "type": "select", "label": "Scene", "optionsFrom": "scenes" }]
+    },
+    {
+      "id": "record",
+      "name": "Record",
+      "render": "card",
+      "sizes": ["1x1", "2x1", "2x2"],
+      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
+        { "t": "row", "gap": 1, "children": [{ "t": "pill", "text": "REC", "tone": "bad" }, { "t": "spacer" }, { "t": "text", "text": "12:04", "bold": true }] },
+        { "t": "row", "gap": 1, "grow": true, "children": [
+          { "t": "button", "layout": "tile", "label": "12:04", "icon": "player-stop", "action": "record", "args": { "mode": "stop" }, "active": true, "tone": "bad" },
+          { "t": "button", "layout": "tile", "label": "Pause", "icon": "player-pause", "action": "record-pause", "args": { "mode": "pause" } }
+        ] }
+      ] } },
+      "settings": []
+    },
+    {
+      "id": "stream",
+      "name": "Stream",
+      "render": "card",
+      "sizes": ["1x1", "2x1", "2x2"],
+      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
+        { "t": "row", "gap": 1, "children": [{ "t": "pill", "text": "LIVE", "tone": "bad" }, { "t": "spacer" }, { "t": "text", "text": "1:02:41", "bold": true }] },
+        { "t": "row", "gap": 1, "grow": true, "children": [{ "t": "button", "layout": "tile", "label": "1:02:41", "icon": "player-stop", "action": "stream", "args": { "mode": "stop" }, "active": true, "tone": "bad" }] }
+      ] } },
+      "settings": []
+    },
+    {
+      "id": "mute",
+      "name": "Mute",
+      "render": "card",
+      "sizes": ["1x1", "2x1"],
+      "preview": { "root": { "t": "button", "layout": "tile", "label": "Mic/Aux", "icon": "microphone", "action": "mute", "args": { "input": "Mic/Aux", "mode": "mute" } } },
+      "settings": [{ "key": "input", "type": "select", "label": "Audio input", "optionsFrom": "inputs" }]
+    },
+    {
+      "id": "source",
+      "name": "Source visibility",
+      "render": "card",
+      "sizes": ["1x1", "2x1"],
+      "preview": { "root": { "t": "button", "layout": "tile", "label": "Webcam", "icon": "photo", "action": "source", "args": { "scene": "Main", "source": "Webcam", "mode": "hide" }, "active": true } },
+      "settings": [
+        { "key": "scene", "type": "select", "label": "Scene", "optionsFrom": "scenes" },
+        { "key": "source", "type": "select", "label": "Source", "optionsFrom": "sources" }
+      ]
+    },
+    {
+      "id": "virtualcam",
+      "name": "Virtual camera",
+      "render": "card",
+      "sizes": ["1x1", "2x1"],
+      "preview": { "root": { "t": "button", "layout": "tile", "label": "Virtual camera", "icon": "camera", "action": "virtualcam", "args": { "mode": "start" } } },
+      "settings": []
+    },
+    {
+      "id": "tools",
+      "name": "Transition and replay",
+      "render": "card",
+      "sizes": ["2x1", "2x2"],
+      "preview": { "root": { "t": "row", "gap": 1, "grow": true, "children": [
+        { "t": "button", "layout": "tile", "label": "Transition", "icon": "arrows-shuffle", "action": "transition" },
+        { "t": "button", "layout": "tile", "label": "Save replay", "icon": "device-floppy", "action": "replay-save" }
+      ] } },
+      "settings": []
+    }
+  ],
+  "actions": [
+    { "id": "scene", "name": "Switch scene", "settings": [{ "key": "scene", "type": "select", "label": "Scene", "optionsFrom": "scenes" }] },
+    { "id": "record", "name": "Record", "settings": [{ "key": "mode", "type": "select", "label": "Do what", "options": ["toggle", "start", "stop"], "default": "toggle" }] },
+    { "id": "record-pause", "name": "Pause recording", "settings": [{ "key": "mode", "type": "select", "label": "Do what", "options": ["toggle", "pause", "resume"], "default": "toggle" }] },
+    { "id": "stream", "name": "Stream", "settings": [{ "key": "mode", "type": "select", "label": "Do what", "options": ["toggle", "start", "stop"], "default": "toggle" }] },
+    { "id": "mute", "name": "Mute an audio input", "settings": [
+      { "key": "input", "type": "select", "label": "Audio input", "optionsFrom": "inputs" },
+      { "key": "mode", "type": "select", "label": "Do what", "options": ["toggle", "mute", "unmute"], "default": "toggle" }
+    ] },
+    { "id": "source", "name": "Show or hide a source", "settings": [
+      { "key": "scene", "type": "select", "label": "Scene", "optionsFrom": "scenes" },
+      { "key": "source", "type": "select", "label": "Source", "optionsFrom": "sources" },
+      { "key": "mode", "type": "select", "label": "Do what", "options": ["toggle", "show", "hide"], "default": "toggle" }
+    ] },
+    { "id": "transition", "name": "Studio mode transition" },
+    { "id": "replay-save", "name": "Save the replay buffer" },
+    { "id": "virtualcam", "name": "Virtual camera", "settings": [{ "key": "mode", "type": "select", "label": "Do what", "options": ["toggle", "start", "stop"], "default": "toggle" }] }
+  ],
+  "main": "src/index.ts"
+}
