@@ -1,18 +1,21 @@
 # Crypto price
 
-A no-code Nookdeck plugin: one tile that shows the live USD price of a coin. It is the smallest useful plugin and the best one to copy.
+Live coin prices from [CoinGecko](https://www.coingecko.com)'s free public API. No account or key. Works on macOS, Windows and Linux.
 
-- The tile uses the built-in `stat` renderer.
-- The only access it asks for is `api.coingecko.com` (network). No shell, no keyboard.
-- The coin is a setting. Put the CoinGecko id (`bitcoin`, `ethereum`, `solana`) in the tile's settings.
+## Tiles
 
-## Try it
+- **Watchlist**: one row per coin with the price and the 24-hour change, green or red. A 4-wide tile adds each coin's chart for the last 7 days. Up to 6 coins.
+- **Price**: one coin as a large number (the `stat` tile), in USD. Put the CoinGecko id (`bitcoin`, `ethereum`) in the tile's settings. This tile is a plain `source` in `nookdeck.json`, without code, and is the smallest example to copy.
 
-1. Open the manage page, go to **Plugins**, then **Discover**.
-2. Find **Crypto price** and press **Add**. It comes from the [nookdeck-plugins](https://github.com/howznguyen/nookdeck-plugins) registry, pinned to the reviewed version.
-3. Read the access list, then **Allow and turn on**.
-4. Press **Add tile to a screen**, then pick the coin in the tile settings.
+## Settings
 
-Writing your own? Copy this folder, change the `id`, and install it with **Install from a link** (a GitHub URL or a local folder) while you work on it.
+- **Coins**: separated by commas. Common tickers work (`BTC, ETH, SOL, BNB, XRP, DOGE, TON`...). For any other coin use its CoinGecko id, the last part of its page address: coingecko.com/en/coins/**the-open-network**. A coin CoinGecko does not know shows "not found" on its row.
+- **Currency**: USD, EUR, VND, JPY, GBP, AUD, CAD, SGD, KRW, INR or BRL. Large prices are shortened on a 2-wide tile (1.6B₫).
 
-See [docs/plugins.md](../../../docs/plugins.md) for the full manifest.
+## How often it asks
+
+One request covers every coin of the list, at most once a minute. CoinGecko's free API limits the requests a minute. After "too many requests" the plugin waits 3 minutes and keeps the last prices on the tile meanwhile. The last answer is saved, so a restart does not ask again at once.
+
+## Access
+
+`api.coingecko.com` (network) and storage (the last prices). No shell, no keyboard.

@@ -1,26 +1,46 @@
 {
+  "$schema": "https://nookdeck.app/schema/plugin.json",
   "id": "dev.nookdeck.crypto-price",
   "name": "Crypto price",
-  "version": "1.0.1",
-  "nookdeck": ">=0.2.0",
+  "version": "1.1.0",
+  "nookdeck": ">=0.6.0",
   "author": "Nookdeck",
-  "description": "Live price of a coin",
+  "description": "Live coin prices from CoinGecko: a watchlist of up to 6 coins with the 24-hour change and the week's chart, or one coin as a stat tile",
   "icon": "icon.svg",
-  "permissions": { "network": ["api.coingecko.com"] },
-  "widgets": [{
-    "id": "price",
-    "name": "Price",
-    "render": "stat",
-    "sizes": ["2x1", "2x2"],
-    "settings": [{ "key": "coin", "type": "string", "label": "Coin id", "default": "bitcoin" }],
-    "preview": { "value": 60721, "unit": "USD", "label": "bitcoin" },
-    "source": {
-      "http": { "url": "https://api.coingecko.com/api/v3/simple/price?ids={{coin}}&vs_currencies=usd", "every": 60 },
-      "map": { "value": "$.{{coin}}.usd", "unit": "USD", "label": "{{coin}}" }
+  "permissions": { "network": ["api.coingecko.com"], "storage": true },
+  "settings": [
+    { "key": "coins", "type": "string", "label": "Coins (up to 6: BTC, ETH or CoinGecko ids such as bitcoin)", "default": "BTC, ETH, SOL" },
+    { "key": "currency", "type": "select", "label": "Currency", "options": ["usd", "eur", "vnd", "jpy", "gbp", "aud", "cad", "sgd", "krw", "inr", "brl"], "default": "usd" }
+  ],
+  "widgets": [
+    {
+      "id": "watchlist",
+      "name": "Watchlist",
+      "render": "card",
+      "sizes": ["2x2", "4x2", "4x3"],
+      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
+        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "BTC", "bold": true }, { "t": "text", "text": "$61,327" }, { "t": "pill", "text": "+0.80%", "tone": "ok" }] },
+        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "ETH", "bold": true }, { "t": "text", "text": "$2,418" }, { "t": "pill", "text": "−1.12%", "tone": "bad" }] },
+        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "SOL", "bold": true }, { "t": "text", "text": "$142.35" }, { "t": "pill", "text": "+2.41%", "tone": "ok" }] },
+        { "t": "text", "text": "24h · USD · CoinGecko", "size": "s", "tone": "muted" }
+      ] } },
+      "settings": []
+    },
+    {
+      "id": "price",
+      "name": "Price",
+      "render": "stat",
+      "sizes": ["2x1", "2x2"],
+      "settings": [{ "key": "coin", "type": "string", "label": "Coin id", "default": "bitcoin" }],
+      "preview": { "value": 60721, "unit": "USD", "label": "bitcoin" },
+      "source": {
+        "http": { "url": "https://api.coingecko.com/api/v3/simple/price?ids={{coin}}&vs_currencies=usd", "every": 60 },
+        "map": { "value": "$.{{coin}}.usd", "unit": "USD", "label": "{{coin}}" }
+      }
     }
-  }],
+  ],
   "actions": [],
   "themes": [],
   "layouts": [],
-  "main": null
+  "main": "src/index.ts"
 }
