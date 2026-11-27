@@ -72,14 +72,15 @@
     "id": "dev.nookdeck.crypto-price",
     "name": "Crypto price",
     "author": "Nookdeck",
-    "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/10914a72617d8cff160853e31a1c049eed0e04f4/plugins/crypto-price",
-    "version": "1.0.1",
-    "sha256": "7233e20250c8482192e730c1cfc2c284c8613172762e0d13e3a357034957be5f",
-    "description": "Live price of a coin from CoinGecko, as a stat tile",
+    "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/0ee6b85c33c2587a6d1a31db48d3d4712a9c27af/plugins/crypto-price",
+    "version": "1.1.0",
+    "sha256": "265804dc62503601e0a4b3451487ba219d9b3adb241dfd6aacbda6dbe0eba8c3",
+    "description": "Live coin prices from CoinGecko: a watchlist of up to 6 coins with the 24-hour change and the week's chart, or one coin as a stat tile",
     "permissions": {
       "network": [
         "api.coingecko.com"
-      ]
+      ],
+      "storage": true
     }
   },
   {

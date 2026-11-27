@@ -44,7 +44,7 @@ Browse them with previews at [nookdeck.app/plugins](https://nookdeck.app/plugins
 | [Batteries](plugins/batteries) | 1.0.1 | Battery of your Mac, Magic keyboard, mouse and trackpad, and AirPods | shell |
 | [Calendar](plugins/calendar) | 1.0.0 | Your next events from Google, iCloud and Outlook calendar links | network: calendar.google.com, *.icloud.com, outlook.live.com, outlook.office365.com, outlook.office.com |
 | [Clipboard snippets](plugins/clipboard-snippets) | 1.0.0 | Buttons that copy a saved piece of text to the clipboard | shell |
-| [Crypto price](plugins/crypto-price) | 1.0.1 | Live price of a coin from CoinGecko, as a stat tile | network: api.coingecko.com |
+| [Crypto price](plugins/crypto-price) | 1.1.0 | Live coin prices from CoinGecko: a watchlist of up to 6 coins with the 24-hour change and the week's chart, or one coin as a stat tile | network: api.coingecko.com, storage |
 | [GitHub stars](plugins/github-stars) | 1.1.0 | Star count of a GitHub repository, with a short history | network: api.github.com, storage |
 | [Mac controls](plugins/mac-controls) | 1.0.0 | Dark mode, keep awake, display off and lock, from the phone | shell, storage |
 | [OBS Studio](plugins/obs) | 1.0.0 | Scenes, recording, streaming, mute and sources of OBS Studio, with their live state, and On Air while you are live | network: ws://127.0.0.1:4455, ws://localhost:4455, On Air |
