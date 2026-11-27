@@ -47,9 +47,12 @@ Browse them with previews at [nookdeck.app/plugins](https://nookdeck.app/plugins
 | [Crypto price](plugins/crypto-price) | 1.0.1 | Live price of a coin from CoinGecko, as a stat tile | network: api.coingecko.com |
 | [GitHub stars](plugins/github-stars) | 1.1.0 | Star count of a GitHub repository, with a short history | network: api.github.com, storage |
 | [Mac controls](plugins/mac-controls) | 1.0.0 | Dark mode, keep awake, display off and lock, from the phone | shell, storage |
-| [Pomodoro](plugins/pomodoro) | 1.0.0 | A focus timer that keeps time on the computer while the phone sleeps | storage |
+| [OBS Studio](plugins/obs) | 1.0.0 | Scenes, recording, streaming, mute and sources of OBS Studio, with their live state, and On Air while you are live | network: ws://127.0.0.1:4455, ws://localhost:4455, On Air |
+| [Pomodoro](plugins/pomodoro) | 1.1.0 | A focus timer that keeps time on the computer while the phone sleeps | storage, notifications |
 | [Apple Shortcuts](plugins/shortcuts) | 1.0.1 | Run your Apple Shortcuts from the phone | shell |
+| [Stocks](plugins/stocks) | 1.0.0 | Price, change and today's chart for up to 4 symbols, from Twelve Data with your own free API key | network: api.twelvedata.com, storage |
 | [Uptime ping](plugins/uptime-ping) | 1.1.0 | Checks whether a web address answers, and how fast | network: nookdeck.app, storage |
+| [Water reminder](plugins/water) | 1.0.0 | Count your glasses of water toward a daily goal, with reminders on the phone during the hours you choose | storage, notifications |
 
 ## Listed themes
 

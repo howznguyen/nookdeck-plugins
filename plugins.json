@@ -115,16 +115,33 @@
     ]
   },
   {
+    "id": "dev.nookdeck.obs",
+    "name": "OBS Studio",
+    "author": "Nookdeck",
+    "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/400b6808e72344afbeb7ce2cb123ca55f2f6db83/plugins/obs",
+    "version": "1.0.0",
+    "sha256": "b19320c021e95ca8cfaf27187928ede0fd813268f070da613cab8dea365e256a",
+    "description": "Scenes, recording, streaming, mute and sources of OBS Studio, with their live state, and On Air while you are live",
+    "permissions": {
+      "network": [
+        "ws://127.0.0.1:4455",
+        "ws://localhost:4455"
+      ],
+      "onair": true
+    }
+  },
+  {
     "id": "dev.nookdeck.pomodoro",
     "name": "Pomodoro",
     "author": "Nookdeck",
-    "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/78d136e7039d3ba3158ae08317b64574a6dc4eee/plugins/pomodoro",
-    "version": "1.0.0",
-    "sha256": "7c05e43420dc14dcbacfac092296f3e27561166efe9eb14ec3eecd42ea011890",
+    "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/400b6808e72344afbeb7ce2cb123ca55f2f6db83/plugins/pomodoro",
+    "version": "1.1.0",
+    "sha256": "84717e0f6ef698c920a345b30cfe297bf86a6eedf58a97eb5a0753cbe732bea3",
     "description": "A focus timer that keeps time on the computer while the phone sleeps",
-    "screenshot": "https://raw.githubusercontent.com/howznguyen/nookdeck-plugins/78d136e7039d3ba3158ae08317b64574a6dc4eee/plugins/pomodoro/preview.png",
+    "screenshot": "https://raw.githubusercontent.com/howznguyen/nookdeck-plugins/400b6808e72344afbeb7ce2cb123ca55f2f6db83/plugins/pomodoro/preview.png",
     "permissions": {
-      "storage": true
+      "storage": true,
+      "notify": true
     }
   },
   {
@@ -144,6 +161,21 @@
     ]
   },
   {
+    "id": "dev.nookdeck.stocks",
+    "name": "Stocks",
+    "author": "Nookdeck",
+    "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/400b6808e72344afbeb7ce2cb123ca55f2f6db83/plugins/stocks",
+    "version": "1.0.0",
+    "sha256": "4e7f2393cd3c59d498d122a6354adfc89eb247697e1ac0ea9978456be654836b",
+    "description": "Price, change and today's chart for up to 4 symbols, from Twelve Data with your own free API key",
+    "permissions": {
+      "network": [
+        "api.twelvedata.com"
+      ],
+      "storage": true
+    }
+  },
+  {
     "id": "dev.nookdeck.uptime-ping",
     "name": "Uptime ping",
     "author": "Nookdeck",
@@ -156,6 +188,19 @@
         "nookdeck.app"
       ],
       "storage": true
+    }
+  },
+  {
+    "id": "dev.nookdeck.water",
+    "name": "Water reminder",
+    "author": "Nookdeck",
+    "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/400b6808e72344afbeb7ce2cb123ca55f2f6db83/plugins/water",
+    "version": "1.0.0",
+    "sha256": "bdc89255301f12766ef18a64aeccaf252f17b3f468c7992a3a588ec62307dbca",
+    "description": "Count your glasses of water toward a daily goal, with reminders on the phone during the hours you choose",
+    "permissions": {
+      "storage": true,
+      "notify": true
     }
   }
 ]
