@@ -73,8 +73,8 @@
     "name": "Crypto price",
     "author": "Nookdeck",
     "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/0ee6b85c33c2587a6d1a31db48d3d4712a9c27af/plugins/crypto-price",
-    "version": "1.1.0",
-    "sha256": "265804dc62503601e0a4b3451487ba219d9b3adb241dfd6aacbda6dbe0eba8c3",
+    "version": "1.2.0",
+    "sha256": "cd37be81dc174276f000767b5ae3dd1bda67e1dcb9287a342c4deb431aa407e9",
     "description": "Live coin prices from CoinGecko: a watchlist of up to 6 coins with the 24-hour change and the week's chart, or one coin as a stat tile",
     "permissions": {
       "network": [
@@ -166,8 +166,8 @@
     "name": "Stocks",
     "author": "Nookdeck",
     "repo": "https://github.com/howznguyen/nookdeck-plugins/tree/400b6808e72344afbeb7ce2cb123ca55f2f6db83/plugins/stocks",
-    "version": "1.0.0",
-    "sha256": "4e7f2393cd3c59d498d122a6354adfc89eb247697e1ac0ea9978456be654836b",
+    "version": "1.1.0",
+    "sha256": "9fda4bfe892159356a8d95f8ea62038c8ab94b9dbeaca13d6911772c40ab6f85",
     "description": "Price, change and today's chart for up to 4 symbols, from Twelve Data with your own free API key",
     "permissions": {
       "network": [
