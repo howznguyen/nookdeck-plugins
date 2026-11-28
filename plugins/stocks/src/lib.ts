@@ -11,7 +11,8 @@ export const CLOSED_EVERY_MS = 2 * 60 * 60_000;
 /** After "limit reached", wait this long before asking again. */
 export const LIMIT_WAIT_MS = 15 * 60_000;
 export const API = "https://api.twelvedata.com";
-export const KEY_HELP = "Add your free Twelve Data API key in this plugin's settings (twelvedata.com, free plan)";
+/** The empty tile without a key: three short lines, each fits a 2x2 tile (the deck leaves the last ones out on smaller tiles). */
+export const KEY_HELP = ["Add an API key", "free at twelvedata.com", "in Plugins › Stocks"] as const;
 
 export interface Quote {
   symbol: string;
@@ -88,36 +89,63 @@ export function price(n: number): string {
   const digits = Math.abs(n) >= 1000 ? 0 : Math.abs(n) >= 1 ? 2 : 4;
   return n.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }
+const SIGN: Record<string, string> = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", CNY: "¥", HKD: "HK$", INR: "₹", KRW: "₩", CAD: "C$", AUD: "A$", CHF: "CHF ", VND: "₫" };
+/** The price with its currency's sign ("$355.58", "€92.10", "1,250₫"); an unknown currency shows the bare number. */
+export function money(n: number, currency: string): string {
+  const cur = currency.toUpperCase();
+  if (cur === "GBX" || currency === "GBp") return `${price(n)}p`; // London prices in pence
+  const s = SIGN[cur];
+  if (!s) return price(n);
+  return cur === "VND" ? `${price(n)}₫` : `${s}${price(n)}`;
+}
 export const pct = (n: number): string => `${n > 0 ? "+" : n < 0 ? "−" : ""}${Math.abs(n).toFixed(2)}%`;
-const tone = (n: number) => (n > 0 ? "ok" : n < 0 ? "bad" : "muted");
+const signed = (n: number): string => `${n > 0 ? "+" : n < 0 ? "−" : ""}${price(Math.abs(n))}`;
+export const tone = (n: number) => (n > 0 ? "ok" : n < 0 ? "bad" : "muted");
 
-export function message(lines: string[], icon = "alert-triangle"): CardData {
-  return card({ t: "col", gap: 1, align: "center", grow: true, children: [{ t: "icon", name: icon, tone: "muted" }, ...lines.map((l, i) => text(l, { size: "s", tone: i ? "muted" : "default" }))] });
+/** A card chart takes up to 60 points: the day's 5-minute closes (up to 78), every nth one, always ending on the latest. */
+export function thin(points: number[], max = 56): number[] {
+  if (points.length <= max) return points;
+  const step = points.length / max;
+  return Array.from({ length: max }, (_, i) => points[Math.round(points.length - 1 - (max - 1 - i) * step)]!);
 }
 
-const footer = (s: Snapshot): CardNode => text(`${s.open ? "Market open" : "Market closed"}${s.error ? ` · ${s.error}` : ""}`, { size: "s", tone: s.error ? "warn" : "muted" });
+/** An empty or waiting tile: an icon and up to three short lines, the first in the text colour; the deck drops the last lines on small tiles. */
+export function message(lines: readonly string[], icon = "alert-triangle"): CardData {
+  return card({ t: "col", gap: 1, align: "center", grow: true, children: [{ t: "icon", name: icon, tone: "muted" }, ...lines.slice(0, 3).map((l, i) => text(l, { size: i ? "s" : "m", tone: i ? "muted" : "default" }))] });
+}
 
-/** Every symbol on a row: name, price, change; a sparkline on tiles 4 wide. */
+const state = (s: Snapshot) => (s.open ? "Market open" : "Market closed");
+const footer = (s: Snapshot): CardNode => text(`${state(s)} · Twelve Data${s.error ? ` · ${s.error}` : ""}`, { size: "s", tone: s.error ? "warn" : "muted" });
+
+/** How a watchlist uses its tile: how many rows, whether the first is a hero row, and whether the footer fits. */
+export function plan(tile: Tile, count: number): { rows: number; hero: boolean; footer: boolean } {
+  const { w, h } = tile;
+  if (h <= 1) return { rows: Math.min(count, w >= 3 ? 2 : 1), hero: false, footer: false };
+  if (h === 2) return { rows: Math.min(count, MAX_SYMBOLS), hero: false, footer: true };
+  // a hero takes about two rows: on a 3-high tile it and three more (all four), as on taller ones
+  return { rows: Math.min(count, MAX_SYMBOLS), hero: w >= 3, footer: true };
+}
+
+/** One symbol as a ticker row: symbol, company, price with its sign, the day's change and its chart. A hero says the change in money too. */
+export function tickerOf(q: Quote, s: Snapshot, hero = false): CardNode {
+  return {
+    t: "ticker", symbol: q.symbol.slice(0, 16), name: q.name.slice(0, 60), price: money(q.price, q.currency).slice(0, 40),
+    change: pct(q.percent), tone: tone(q.change),
+    ...(q.points.length > 1 ? { points: thin(q.points, hero ? 60 : 40) } : {}),
+    ...(hero ? { hero: true, note: `${signed(q.change)} ${s.open ? "today" : "at the close"} · ${state(s)}` } : {}),
+  } as CardNode;
+}
+
+/** Every symbol on a row (the first one large on tall tiles), then the ones that failed, then the market's state. */
 export function listCard(s: Snapshot, tile: Tile = { w: 2, h: 2 }, failed: Array<{ symbol: string; error: string }> = []): CardData {
-  const wide = tile.w >= 4;
-  const rows: CardNode[] = s.quotes.map((q) => ({ t: "row", gap: 1, align: "between", children: [
-    text(q.symbol, { bold: true }),
-    wide && q.points.length > 1 && ({ t: "sparkline", points: q.points.slice(-60), tone: tone(q.change) } as CardNode),
-    text(price(q.price)),
-    { t: "pill", text: pct(q.percent), tone: tone(q.change) },
-  ].filter(Boolean) }) as CardNode);
-  for (const f of failed) rows.push({ t: "row", gap: 1, align: "between", children: [text(f.symbol, { bold: true }), text(f.error, { size: "s", tone: "muted" })] } as CardNode);
-  return card({ t: "col", gap: 1, grow: true, children: [...rows, footer(s)] });
+  const p = plan(tile, s.quotes.length + failed.length);
+  const rows: CardNode[] = s.quotes.slice(0, p.rows).map((q, i) => tickerOf(q, s, p.hero && i === 0));
+  for (const f of failed.slice(0, Math.max(0, p.rows - rows.length))) rows.push({ t: "row", gap: 1, align: "between", children: [text(f.symbol, { bold: true }), text(f.error, { size: "s", tone: "muted" })] } as CardNode);
+  return card({ t: "col", gap: 0, grow: true, children: [...rows, (p.footer || s.error) && footer(s)].filter(Boolean) });
 }
 
-/** One symbol, large: price, change, the day's sparkline. */
+/** One symbol, large: a hero row (price, change, the day's chart, the change in money and the market's state); one row on a 1-high tile. */
 export function quoteCard(s: Snapshot, q: Quote, tile: Tile = { w: 2, h: 2 }): CardData {
-  const small = tile.h <= 1;
-  return card({ t: "col", gap: 1, grow: true, children: [
-    { t: "row", gap: 1, align: "between", children: [text(q.symbol, { bold: true }), { t: "pill", text: pct(q.percent), tone: tone(q.change) }] },
-    { t: "number", value: price(q.price), unit: q.currency, size: small ? "m" : "xl" },
-    !small && text(`${q.change > 0 ? "+" : q.change < 0 ? "−" : ""}${price(Math.abs(q.change))} today`, { size: "s", tone: tone(q.change) }),
-    !small && q.points.length > 1 && { t: "sparkline", points: q.points.slice(-60), tone: tone(q.change) },
-    !small && footer(s),
-  ].filter(Boolean) });
+  if (tile.h <= 1) return card({ t: "col", gap: 0, grow: true, align: "center", children: [tickerOf(q, s)] });
+  return card({ t: "col", gap: 0, grow: true, children: [tickerOf(q, s, true), s.error && footer(s)].filter(Boolean) });
 }

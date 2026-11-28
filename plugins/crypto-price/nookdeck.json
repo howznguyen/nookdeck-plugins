@@ -2,8 +2,8 @@
   "$schema": "https://nookdeck.app/schema/plugin.json",
   "id": "dev.nookdeck.crypto-price",
   "name": "Crypto price",
-  "version": "1.1.0",
-  "nookdeck": ">=0.6.0",
+  "version": "1.2.0",
+  "nookdeck": ">=0.7.4",
   "author": "Nookdeck",
   "description": "Live coin prices from CoinGecko: a watchlist of up to 6 coins with the 24-hour change and the week's chart, or one coin as a stat tile",
   "icon": "icon.svg",
@@ -17,11 +17,11 @@
       "id": "watchlist",
       "name": "Watchlist",
       "render": "card",
-      "sizes": ["2x2", "4x2", "4x3"],
-      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
-        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "BTC", "bold": true }, { "t": "text", "text": "$61,327" }, { "t": "pill", "text": "+0.80%", "tone": "ok" }] },
-        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "ETH", "bold": true }, { "t": "text", "text": "$2,418" }, { "t": "pill", "text": "−1.12%", "tone": "bad" }] },
-        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "SOL", "bold": true }, { "t": "text", "text": "$142.35" }, { "t": "pill", "text": "+2.41%", "tone": "ok" }] },
+      "sizes": ["2x2", "4x1", "4x2", "4x3"],
+      "preview": { "root": { "t": "col", "gap": 0, "grow": true, "children": [
+        { "t": "ticker", "symbol": "BTC", "name": "Bitcoin", "price": "$61,327", "change": "+0.80%", "tone": "ok", "points": [61900, 62150, 61800, 61500, 61720, 61300, 60950, 61200, 61040, 60600, 60820, 60400, 60710, 60980, 61327] },
+        { "t": "ticker", "symbol": "ETH", "name": "Ethereum", "price": "$2,418", "change": "−1.12%", "tone": "bad", "points": [2480, 2470, 2490, 2462, 2450, 2441, 2455, 2436, 2428, 2440, 2419, 2425, 2410, 2422, 2418.4] },
+        { "t": "ticker", "symbol": "SOL", "name": "Solana", "price": "$142.35", "change": "+2.41%", "tone": "ok", "points": [138.2, 139.0, 138.6, 140.1, 139.7, 141.2, 140.6, 141.9, 141.1, 142.6, 141.8, 142.9, 142.1, 142.7, 142.35] },
         { "t": "text", "text": "24h · USD · CoinGecko", "size": "s", "tone": "muted" }
       ] } },
       "settings": []
@@ -31,12 +31,8 @@
       "name": "Price",
       "render": "stat",
       "sizes": ["2x1", "2x2"],
-      "settings": [{ "key": "coin", "type": "string", "label": "Coin id", "default": "bitcoin" }],
-      "preview": { "value": 60721, "unit": "USD", "label": "bitcoin" },
-      "source": {
-        "http": { "url": "https://api.coingecko.com/api/v3/simple/price?ids={{coin}}&vs_currencies=usd", "every": 60 },
-        "map": { "value": "$.{{coin}}.usd", "unit": "USD", "label": "{{coin}}" }
-      }
+      "settings": [{ "key": "coin", "type": "string", "label": "Coin (BTC, ETH or a CoinGecko id such as bitcoin)", "default": "bitcoin" }],
+      "preview": { "value": "$61,327", "label": "Bitcoin", "delta": 0.8, "points": [61900, 62150, 61800, 61500, 61720, 61300, 60950, 61200, 61040, 60600, 60820, 60400, 60710, 60980, 61327] }
     }
   ],
   "actions": [],

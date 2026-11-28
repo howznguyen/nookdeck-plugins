@@ -8,12 +8,14 @@ Price, change and today's chart for up to 4 symbols. The data comes from [Twelve
 2. Copy the API key from your account page.
 3. Paste it into this plugin's **Twelve Data API key** setting. It is stored as a secret.
 
-Until a key is set, the tiles say how to get one.
+Until a key is set, the tiles show a lock, "Add an API key" and where to put it.
 
 ## Tiles
 
-- **Watchlist**: one row per symbol with the price and the change of the day. A 4-wide tile adds each symbol's chart for today. The last line says whether the market is open.
-- **One symbol**: the price in large type, the change and today's chart. Pick the symbol in the tile's settings. It must be one of the plugin's symbols. Leave it empty to show the first one.
+- **Watchlist**: one row per symbol: the symbol and the company, the price with its currency sign, the change of the day as a green or red chip, and today's chart where the row is wide enough. On a 3-high tile the first symbol is a large row with a bigger chart. The last line says whether the market is open.
+- **One symbol**: the price in large type, the change and today's chart, with the change in money and whether the market is open. A 2x1 tile shows one row. Pick the symbol in the tile's settings. It must be one of the plugin's symbols. Leave it empty to show the first one.
+
+The tiles need Nookdeck 0.7.4 or later.
 
 ## How often it asks
 

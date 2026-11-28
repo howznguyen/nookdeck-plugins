@@ -72,8 +72,8 @@ export function createPlugin(env: Env = real): PluginModule {
 
       const empty = (): ReturnType<typeof message> | null => {
         const s = ctx.settings.get();
-        if (!(typeof s.apikey === "string" && s.apikey.trim())) return message([KEY_HELP], "settings");
-        if (!symbols(s.symbols).list.length) return message(["Add up to 4 symbols in this plugin's settings, such as AAPL, MSFT"], "settings");
+        if (!(typeof s.apikey === "string" && s.apikey.trim())) return message(KEY_HELP, "lock");
+        if (!symbols(s.symbols).list.length) return message(["No symbols yet", "Add them in Plugins", "such as AAPL, MSFT"], "settings");
         return null;
       };
 
@@ -81,7 +81,7 @@ export function createPlugin(env: Env = real): PluginModule {
         const none = empty();
         if (none) return { render: "card", data: none };
         const s = await latest();
-        if (!s || (!s.quotes.length && s.error)) return { render: "card", data: message([s?.error ?? "Loading…"]) };
+        if (!s || (!s.quotes.length && s.error)) return { render: "card", data: s?.error ? message(["No prices yet", s.error]) : message(["Loading prices"], "refresh") };
         return { render: "card", data: listCard(s, tile, failed) };
       }, { every: 60 });
 
@@ -91,10 +91,11 @@ export function createPlugin(env: Env = real): PluginModule {
         const want = String(ts.symbol ?? "").trim().toUpperCase();
         const list = symbols(ctx.settings.get().symbols).list;
         const sym = want || list[0]!;
-        if (!list.includes(sym)) return { render: "card", data: message([`${sym} is not in this plugin's Symbols setting`, "Add it there (up to 4)"], "settings") };
+        if (!list.includes(sym)) return { render: "card", data: message([`${sym} is not in the list`, "Add it in Plugins › Stocks", "up to 4 symbols"], "settings") };
         const s = await latest();
         const q = s?.quotes.find((x) => x.symbol === sym);
-        if (!s || !q) return { render: "card", data: message([failed.find((f) => f.symbol === sym)?.error ?? s?.error ?? "Loading…"]) };
+        const why = failed.find((f) => f.symbol === sym)?.error ?? s?.error;
+        if (!s || !q) return { render: "card", data: why ? message([`No price for ${sym}`, why]) : message(["Loading prices"], "refresh") };
         return { render: "card", data: quoteCard(s, q, tile) };
       }, { every: 60 });
     },

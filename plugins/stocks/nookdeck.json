@@ -2,8 +2,8 @@
   "$schema": "https://nookdeck.app/schema/plugin.json",
   "id": "dev.nookdeck.stocks",
   "name": "Stocks",
-  "version": "1.0.0",
-  "nookdeck": ">=0.6.0",
+  "version": "1.1.0",
+  "nookdeck": ">=0.7.4",
   "author": "Nookdeck",
   "description": "Price, change and today's chart for up to 4 symbols, from Twelve Data with your own free API key",
   "icon": "activity",
@@ -17,11 +17,11 @@
       "id": "watchlist",
       "name": "Watchlist",
       "render": "card",
-      "sizes": ["2x2", "4x2", "4x3"],
-      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
-        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "AAPL", "bold": true }, { "t": "text", "text": "355.58" }, { "t": "pill", "text": "+0.43%", "tone": "ok" }] },
-        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "MSFT", "bold": true }, { "t": "text", "text": "512.10" }, { "t": "pill", "text": "−0.82%", "tone": "bad" }] },
-        { "t": "text", "text": "Market open", "size": "s", "tone": "muted" }
+      "sizes": ["2x2", "4x1", "4x2", "4x3"],
+      "preview": { "root": { "t": "col", "gap": 0, "grow": true, "children": [
+        { "t": "ticker", "symbol": "AAPL", "name": "Apple Inc", "price": "$355.58", "change": "+0.43%", "tone": "ok", "points": [353.9, 354.2, 353.6, 354.4, 354.1, 354.9, 355.3, 354.8, 355.2, 355.58] },
+        { "t": "ticker", "symbol": "MSFT", "name": "Microsoft Corp", "price": "$512.10", "change": "−0.82%", "tone": "bad", "points": [516.3, 515.8, 516.0, 514.9, 514.2, 514.6, 513.4, 512.9, 513.2, 512.1] },
+        { "t": "text", "text": "Market open · Twelve Data", "size": "s", "tone": "muted" }
       ] } },
       "settings": []
     },
@@ -30,10 +30,8 @@
       "name": "One symbol",
       "render": "card",
       "sizes": ["2x1", "2x2", "3x2", "4x2"],
-      "preview": { "root": { "t": "col", "gap": 1, "grow": true, "children": [
-        { "t": "row", "gap": 1, "align": "between", "children": [{ "t": "text", "text": "AAPL", "bold": true }, { "t": "pill", "text": "+0.43%", "tone": "ok" }] },
-        { "t": "number", "value": "355.58", "unit": "USD", "size": "xl" },
-        { "t": "sparkline", "points": [352.1, 353.4, 352.8, 354.0, 354.9, 354.2, 355.1, 355.6], "tone": "ok" }
+      "preview": { "root": { "t": "col", "gap": 0, "grow": true, "children": [
+        { "t": "ticker", "symbol": "AAPL", "name": "Apple Inc", "price": "$355.58", "change": "+0.43%", "tone": "ok", "points": [352.1, 353.4, 352.8, 354.0, 354.9, 354.2, 355.1, 355.6], "hero": true, "note": "+1.51 today · Market open" }
       ] } },
       "settings": [{ "key": "symbol", "type": "string", "label": "Symbol (one from the plugin's list; empty: the first)", "default": "" }]
     }

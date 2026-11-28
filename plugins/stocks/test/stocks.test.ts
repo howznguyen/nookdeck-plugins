@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { createPlugin } from "../src/index";
-import { CLOSED_EVERY_MS, KEY_HELP, LIMIT_WAIT_MS, OPEN_EVERY_MS, apiError, pct, price, quoteOf, symbols } from "../src/lib";
+import { CLOSED_EVERY_MS, KEY_HELP, LIMIT_WAIT_MS, OPEN_EVERY_MS, apiError, listCard, money, pct, plan, price, quoteCard, quoteOf, symbols, thin, type Quote, type Snapshot } from "../src/lib";
 
 // shapes as api.twelvedata.com answered on 2026-11-27 (demo key)
 const quote = (symbol: string, close: string, change: string, pc: string, open = true) =>
@@ -28,6 +28,40 @@ describe("parsing", () => {
   });
   test("numbers", () => {
     expect([price(355.58), price(64250.2), price(0.12345), pct(0.4265), pct(-1.2), pct(0)]).toEqual(["355.58", "64,250", "0.1235", "+0.43%", "−1.20%", "0.00%"]);
+    expect([money(355.58, "USD"), money(92.1, "EUR"), money(1250, "VND"), money(412.5, "GBp"), money(10, "SEK")]).toEqual(["$355.58", "€92.10", "1,250₫", "412.50p", "10.00"]);
+  });
+  test("the day's 78 closes fit a chart: at most 56, the latest kept", () => {
+    const day = Array.from({ length: 78 }, (_, i) => i);
+    expect(thin(day).length).toBe(56);
+    expect(thin(day).at(-1)).toBe(77);
+  });
+});
+
+const q = (symbol: string, change: number, points = [1, 2, 3]): Quote => ({ symbol, name: symbol + " Inc", currency: "USD", price: 355.58, change, percent: change / 3.5, open: true, points });
+const snap = (o: Partial<Snapshot> = {}): Snapshot => ({ at: 0, next: 0, open: true, quotes: [q("AAPL", 1.51), q("MSFT", -4.2), q("TSLA", 0)], ...o });
+const parts = (c: { root: any }) => (c.root.children as any[]);
+
+describe("tiles", () => {
+  test("plan: rows, hero and footer from the tile's size", () => {
+    expect(plan({ w: 4, h: 1 }, 4)).toEqual({ rows: 2, hero: false, footer: false });
+    expect(plan({ w: 2, h: 2 }, 4)).toEqual({ rows: 4, hero: false, footer: true });
+    expect(plan({ w: 4, h: 3 }, 4)).toEqual({ rows: 4, hero: true, footer: true });
+  });
+  test("watchlist rows are tickers with the currency sign, the change chip and its tone; the footer says the market's state", () => {
+    const rows = parts(listCard(snap({ open: false }), { w: 4, h: 2 }));
+    expect(rows[0]).toMatchObject({ t: "ticker", symbol: "AAPL", name: "AAPL Inc", price: "$355.58", change: "+0.43%", tone: "ok", points: [1, 2, 3] });
+    expect(rows[1].tone).toBe("bad");
+    expect(rows[2].tone).toBe("muted");
+    expect(rows.at(-1)).toMatchObject({ t: "text", text: "Market closed · Twelve Data", tone: "muted" });
+    expect(parts(listCard(snap(), { w: 4, h: 3 }))[0]).toMatchObject({ hero: true, note: "+1.51 today · Market open" });
+  });
+  test("one symbol: a hero row, or one row on a 1-high tile; a closed market says the change was at the close", () => {
+    expect(parts(quoteCard(snap({ open: false }), q("MSFT", -4.2), { w: 3, h: 2 }))[0]).toMatchObject({ t: "ticker", hero: true, note: "−4.20 at the close · Market closed", tone: "bad" });
+    expect(parts(quoteCard(snap(), q("MSFT", -4.2), { w: 2, h: 1 }))[0].hero).toBeUndefined();
+  });
+  test("the empty tile's lines are short enough for a 2x2 tile", () => {
+    for (const l of KEY_HELP) expect(l.length).toBeLessThanOrEqual(22);
+    expect(KEY_HELP.join(" ")).toContain("Plugins › Stocks");
   });
 });
 
@@ -58,7 +92,8 @@ const market = (url: URL) => {
 describe("the plugin", () => {
   test("without a key the tile says how to get one, and nothing is asked", async () => {
     const h = harness({ symbols: "AAPL" }, market);
-    expect(await h.show("watchlist")).toContain(KEY_HELP);
+    expect(await h.show("watchlist")).toContain("Add an API key");
+    expect(await h.show("quote")).toContain("twelvedata.com");
     expect(h.calls).toEqual([]);
   });
   test("two requests for all symbols; again only after 5 minutes while open; a restart reuses the saved snapshot", async () => {
@@ -103,6 +138,6 @@ describe("the plugin", () => {
     const list = await h.show("watchlist");
     expect(list).toContain("355.58");
     expect(list).toContain("not found: ZZZZ");
-    expect(await h.show("quote", { symbol: "TSLA" })).toContain("not in this plugin");
+    expect(await h.show("quote", { symbol: "TSLA" })).toContain("TSLA is not in the list");
   });
 });
